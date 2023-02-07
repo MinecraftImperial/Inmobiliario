@@ -1,0 +1,18 @@
+JOB_NAME: "inmobiliario"
+JOB_DISPLAYNAME: "Agente inmobiliario"
+JOB_LOCATION:
+  ==: org.bukkit.Location
+  world: world
+  x: -24.0
+  y: 77.0
+  z: 48.0
+  pitch: 0.0
+  yaw: 0.0
+DAYS_TO_EXPROPRIATE: 90.0 # Given in days
+AUCTION_CHANNELS:
+  - '【🏠】subastas-inmobiliarias-1'
+  - '【🏠】subastas-inmobiliarias-2'
+  - '【🏠】subastas-inmobiliarias-3'
+AUCTION_DURATION: 45 # Given in seconds
+TIME_TO_PAY: 25 # Time to pay the auction, given in seconds after the auction ends
+AGENT_COMMISSION: 0.1 # 10% of the auction price

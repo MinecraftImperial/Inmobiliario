@@ -1,0 +1,7 @@
+name: Inmobiliario
+main: ar.net.imperial.inmobiliario.Inmobiliario
+version: 1.0
+author: ChasisTorcido
+api-version: 1.19
+depend: [TrabajosCore, ProtectionStones, WorldGuard, DiscordSRV, PlaceholderAPI]
+softdepend: [Notificaciones]
