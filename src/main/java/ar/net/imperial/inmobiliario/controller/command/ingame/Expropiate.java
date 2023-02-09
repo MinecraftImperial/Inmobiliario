@@ -48,16 +48,18 @@ public class Expropiate extends BaseCommand {
     }
 
     @Subcommand("force")
-    @CommandPermission("inmobiliario.expropiate.force")
+    @CommandPermission(FORCE_PERMISSION)
     public void expropriateForce(Player player){
         expropriate(player, true);
     }
 
     public void expropriate(Player player, boolean force) {
         PlayerWrapper playerWrapper = PlayerWrapper.of(player);
-        if (!playerWrapper.hasJob(job)) {
-            player.sendMessage(lang.get(MessagesKey.DO_NOT_HAVE_JOB));
-            return;
+        if (!force) {
+            if (!playerWrapper.hasJob(job)) {
+                player.sendMessage(lang.get(MessagesKey.DO_NOT_HAVE_JOB));
+                return;
+            }
         }
 
         Location location = player.getLocation();

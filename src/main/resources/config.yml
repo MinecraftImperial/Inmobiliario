@@ -1,3 +1,4 @@
+DEBUG_COMMANDS: false
 JOB_NAME: "inmobiliario"
 JOB_DISPLAYNAME: "Agente inmobiliario"
 JOB_LOCATION:

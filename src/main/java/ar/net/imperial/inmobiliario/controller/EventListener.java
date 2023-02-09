@@ -34,8 +34,7 @@ public class EventListener implements Listener {
         saveAuctionData(event.getAuction());
         Player lastBidder = auction.getLastBidder().isOnline() ? auction.getLastBidder().getPlayer() : null;
         if (lastBidder != null) {
-            String shortUUID = auction.getUUID().toString().substring(0, 9);
-            lastBidder.sendMessage(plugin.getLang().get(MessagesKey.WON_AUCTION, true, shortUUID));
+            lastBidder.sendMessage(plugin.getLang().get(MessagesKey.WON_AUCTION));
         }
     }
 
@@ -46,6 +45,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onNoPaymentReceived(NoPaymentReceivedEvent event) {
+        event.getAuction().delete();
         deleteAuctionData(event.getAuction());
     }
 

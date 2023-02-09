@@ -111,12 +111,6 @@ public class Inmobiliario extends JavaPlugin {
         cmdManager.registerCommand(new Expropiate(this));
         cmdManager.registerCommand(new PayAuction(this));
 
-        cmdManager.getCommandCompletions().registerAsyncCompletion("auctionsWon", c -> {
-            List<Auction> auctions = Auction.getAuctionsWon(c.getPlayer());
-            return auctions.stream().map(auction -> auction.getUUID().toString().substring(0, 8)).toList();
-        });
-
-
         DiscordSRV.api.addSlashCommandProvider(new Bid(this));
         new BukkitRunnable() {
             @Override
