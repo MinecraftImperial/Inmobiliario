@@ -1,7 +1,5 @@
 package ar.net.imperial.inmobiliario;
 
-//import ar.net.imperial.imperiallangyml.LangAPI;
-//import ar.net.imperial.imperiallangyml.LangSource;
 import ar.net.imperial.inmobiliario.controller.EventListener;
 import ar.net.imperial.inmobiliario.controller.PlaceholderManager;
 import ar.net.imperial.inmobiliario.controller.command.ingame.PayAuction;
@@ -66,6 +64,7 @@ public class Inmobiliario extends JavaPlugin {
             return false;
         }
         econ = rsp.getProvider();
+        //noinspection ConstantValue
         return econ != null;
     }
 
@@ -149,8 +148,6 @@ public class Inmobiliario extends JavaPlugin {
         String locale = getConfig().getString(Settings.LOCALE.name(), "es");
         Locale.setDefault(new Locale(locale));
         lang = new LangSource(ResourceBundle.getBundle("messages"));
-//        lang = LangAPI.getLangSource(this);
-//        lang.saveDefault();
     }
 
     private void setupJob() {

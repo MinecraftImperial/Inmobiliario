@@ -9,7 +9,6 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import dev.espi.protectionstones.PSProtectBlock;
 import dev.espi.protectionstones.PSRegion;
-import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -35,7 +34,7 @@ public class Auction implements ConfigurationSerializable {
     private final String channel;
     private long startDate; // The date when the auction actually started in milliseconds
 
-    private int lastBid;
+    private long lastBid;
     private OfflinePlayer lastBidder;
     private AuctionStatus status;
 
@@ -119,6 +118,7 @@ public class Auction implements ConfigurationSerializable {
         return payItem;
     }*/
 
+    @SuppressWarnings("unused")
     public static Auction deserialize(@NotNull Map<String, Object> map) {
         UUID uuid = UUID.fromString((String) map.get("uuid"));
         AuctionStatus status = AuctionStatus.valueOf((String) map.get("status"));
@@ -132,7 +132,7 @@ public class Auction implements ConfigurationSerializable {
         if (map.containsKey("lastBidder"))
             lastBidder = Bukkit.getOfflinePlayer(UUID.fromString((String) map.get("lastBidder")));
         OfflinePlayer agent = Bukkit.getOfflinePlayer(UUID.fromString((String) map.get("agent")));
-        List<String> regionNameList = (List<String>) map.get("psRegions");
+        @SuppressWarnings("unchecked") List<String> regionNameList = (List<String>) map.get("psRegions");
         Set<PSRegion> psRegions = new HashSet<>();
 
         for (String regionName : regionNameList) {
@@ -170,6 +170,7 @@ public class Auction implements ConfigurationSerializable {
         return null;
     }
 
+    @SuppressWarnings("unused")
     public String getFormattedPSBlockList() {
         // Create a string with the form "{alias type 1} ({quantity}), {alias type 2} ({quantity}) ... {alias type 3} ({quantity})"
         // from the list psRegions
@@ -248,11 +249,11 @@ public class Auction implements ConfigurationSerializable {
         this.startDate = time;
     }
 
-    public int getLastBid() {
+    public long getLastBid() {
         return lastBid;
     }
 
-    public void setLastBid(int newBid) {
+    public void setLastBid(long newBid) {
         lastBid = newBid;
     }
 
@@ -292,14 +293,7 @@ public class Auction implements ConfigurationSerializable {
         return uuid;
     }
 
-    public void transferPropertiesAndDelete(Player player) {
-        if (lastBidder == null) return;
-        if (!lastBidder.equals(player)) return;
-        delete();
-
-    }
-
-    public void transferProperties(Player player) {
+    public void transferProperties() {
         for (PSRegion psRegion : psRegions) {
             for(UUID uuid : psRegion.getOwners()){
                 psRegion.removeOwner(uuid);

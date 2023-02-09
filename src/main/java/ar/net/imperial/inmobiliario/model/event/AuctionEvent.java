@@ -18,6 +18,7 @@ public abstract class AuctionEvent extends Event {
         return auction;
     }
 
+    @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }

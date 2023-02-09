@@ -87,8 +87,8 @@ public class PayAuction extends BaseCommand {
                 .rows(1)
                 .scrollType(ScrollType.HORIZONTAL)
                 .create();
-        gui.setItem(1, 1, ItemBuilder.from(Material.ARROW).name(previousText).asGuiItem(event -> {gui.previous();}));
-        gui.setItem(1, 9, ItemBuilder.from(Material.ARROW).name(nextText).asGuiItem(event -> {gui.next();}));
+        gui.setItem(1, 1, ItemBuilder.from(Material.ARROW).name(previousText).asGuiItem(event -> gui.previous()));
+        gui.setItem(1, 9, ItemBuilder.from(Material.ARROW).name(nextText).asGuiItem(event -> gui.next()));
         return gui;
     }
 
@@ -104,7 +104,7 @@ public class PayAuction extends BaseCommand {
         makePayments(player, auction);
         
         auction.setStatus(Auction.AuctionStatus.PAID);
-        auction.transferProperties(player);
+        auction.transferProperties();
         
         player.sendRichMessage(lang.getStr("AUCTION_PAY_SUCCESS"));
         

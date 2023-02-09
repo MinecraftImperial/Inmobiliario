@@ -8,16 +8,15 @@ import github.scarsz.discordsrv.api.commands.PluginSlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommandProvider;
 import github.scarsz.discordsrv.dependencies.jda.api.events.interaction.SlashCommandEvent;
+import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.OptionMapping;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.OptionType;
 import github.scarsz.discordsrv.dependencies.jda.api.interactions.commands.build.CommandData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
 
 public class Bid implements SlashCommandProvider {
-    private final FileConfiguration config;
     private final LangSource lang;
     private final Inmobiliario plugin;
     private final String commandName;
@@ -26,7 +25,6 @@ public class Bid implements SlashCommandProvider {
     private final String commandOptionDescription;
 
     public Bid(Inmobiliario plugin) {
-        this.config = plugin.getConfig();
         this.lang = plugin.getLang();
         this.plugin = plugin;
         this.commandName = lang.getStrNoPrefix("TO_BID_COMMAND");
@@ -72,7 +70,13 @@ public class Bid implements SlashCommandProvider {
         double current_bid = auction.getLastBid();
         int minimum_bid = Auction.getMinimumBid(remaining_time, current_bid);
 
-        int newBid = (int) event.getOption(commandOptionName).getAsLong();
+        OptionMapping option = event.getOption(commandOptionName);
+        if (option == null) {
+            event.reply(lang.getStrNoPrefix("BID_TOO_LOW", minimum_bid)).queue();
+            return;
+        }
+        long newBid = option.getAsLong();
+
 
         if(newBid < minimum_bid){
             event.reply(lang.getStrNoPrefix("BID_TOO_LOW", minimum_bid)).queue();

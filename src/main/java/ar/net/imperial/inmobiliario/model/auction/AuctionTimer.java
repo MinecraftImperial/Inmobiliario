@@ -23,29 +23,24 @@ public class AuctionTimer extends BukkitRunnable {
     @Override
     public void run() {
         switch (auction.getStatus()) {
-            case WAITING_TO_START:
+            case WAITING_TO_START -> {
                 if (scheduledStartDate <= System.currentTimeMillis()) {
                     auction.start(pluginManager);
                 }
-                break;
-
-            case ACTIVE:
+            }
+            case ACTIVE -> {
                 if (auction.getStartDate() + duration <= System.currentTimeMillis()) {
                     auction.finish(pluginManager);
                     cancel();
                 }
-                break;
-
-            case WAITING_FOR_PAYMENT:
+            }
+            case WAITING_FOR_PAYMENT -> {
                 if (auction.getStartDate() + duration + timeToPay <= System.currentTimeMillis()) {
                     auction.cancelBecauseNoPayment(pluginManager);
                     cancel();
                 }
-                break;
-
-            case PAID:
-                cancel();
-                break;
+            }
+            case PAID -> cancel();
         }
     }
 
