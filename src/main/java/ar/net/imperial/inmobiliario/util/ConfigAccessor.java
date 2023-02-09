@@ -1,4 +1,4 @@
-package ar.net.imperial.inmobiliario.util.configs;
+package ar.net.imperial.inmobiliario.util;
 
 
 /*

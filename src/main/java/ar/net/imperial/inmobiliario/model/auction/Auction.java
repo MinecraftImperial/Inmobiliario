@@ -315,5 +315,6 @@ public class Auction implements ConfigurationSerializable {
         ACTIVE, // Is running on a discord channel
         WAITING_FOR_PAYMENT, // Has finished and is waiting for payment
         PAID, // Has been paid and is waiting for the agent to dismiss the notification (Useful for the Notifications plugin)
+        CANCELLED, // The user has not paid in time
     }
 }

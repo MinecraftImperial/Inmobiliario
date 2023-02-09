@@ -6,7 +6,6 @@ import ar.net.imperial.inmobiliario.model.auction.AuctionTimer;
 import ar.net.imperial.inmobiliario.model.event.AuctionFinishedEvent;
 import ar.net.imperial.inmobiliario.model.event.AuctionStartedEvent;
 import ar.net.imperial.inmobiliario.model.event.NoPaymentReceivedEvent;
-import ar.net.imperial.inmobiliario.util.MessagesKey;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,7 +33,7 @@ public class EventListener implements Listener {
         saveAuctionData(event.getAuction());
         Player lastBidder = auction.getLastBidder().isOnline() ? auction.getLastBidder().getPlayer() : null;
         if (lastBidder != null) {
-            lastBidder.sendMessage(plugin.getLang().get(MessagesKey.WON_AUCTION));
+            lastBidder.sendRichMessage(plugin.getLang().getStr("WON_AUCTION"));
         }
     }
 
@@ -46,6 +45,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void onNoPaymentReceived(NoPaymentReceivedEvent event) {
         event.getAuction().delete();
+        event.getAuction().setStatus(Auction.AuctionStatus.CANCELLED);
         deleteAuctionData(event.getAuction());
     }
 

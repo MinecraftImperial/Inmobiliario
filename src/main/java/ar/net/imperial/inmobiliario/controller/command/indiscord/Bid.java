@@ -1,9 +1,8 @@
 package ar.net.imperial.inmobiliario.controller.command.indiscord;
 
-import ar.net.imperial.imperiallangyml.LangSource;
 import ar.net.imperial.inmobiliario.Inmobiliario;
 import ar.net.imperial.inmobiliario.model.auction.Auction;
-import ar.net.imperial.inmobiliario.util.MessagesKey;
+import ar.net.imperial.inmobiliario.util.LangSource;
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.api.commands.PluginSlashCommand;
 import github.scarsz.discordsrv.api.commands.SlashCommand;
@@ -15,10 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class Bid implements SlashCommandProvider {
     private final FileConfiguration config;
@@ -33,10 +29,10 @@ public class Bid implements SlashCommandProvider {
         this.config = plugin.getConfig();
         this.lang = plugin.getLang();
         this.plugin = plugin;
-        this.commandName = lang.getString(MessagesKey.TO_BID_COMMAND);
-        this.commandDescription = lang.getString(MessagesKey.TO_BID_COMMAND_DESCRIPTION);
-        this.commandOptionName = lang.getString(MessagesKey.TO_BID_COMMAND_OPTION_1);
-        this.commandOptionDescription = lang.getString(MessagesKey.TO_BID_COMMAND_OPTION_1_DESCRIPTION);
+        this.commandName = lang.getStrNoPrefix("TO_BID_COMMAND");
+        this.commandDescription = lang.getStrNoPrefix("TO_BID_COMMAND_DESCRIPTION");
+        this.commandOptionName = lang.getStrNoPrefix("TO_BID_COMMAND_OPTION_1");
+        this.commandOptionDescription = lang.getStrNoPrefix("TO_BID_COMMAND_OPTION_1_DESCRIPTION");
     }
     @Override
     public Set<PluginSlashCommand> getSlashCommands() {
@@ -52,7 +48,7 @@ public class Bid implements SlashCommandProvider {
 
         UUID uuid = DiscordSRV.getPlugin().getAccountLinkManager().getUuid(event.getUser().getId());
         if (uuid == null) {
-            event.reply(lang.getString(MessagesKey.TO_USE_NEED_TO_LINK_ACCOUNT)).queue();
+            event.reply(lang.getStrNoPrefix("TO_USE_NEED_TO_LINK_ACCOUNT")).queue();
             return;
         }
 
@@ -65,7 +61,7 @@ public class Bid implements SlashCommandProvider {
             }
         }
         if(auction == null){
-            event.reply(lang.getString(MessagesKey.NO_BID_IN_THE_CHANNEL)).queue();
+            event.reply(lang.getStrNoPrefix("NO_BID_IN_THE_CHANNEL")).queue();
             return;
         }
 
@@ -79,7 +75,7 @@ public class Bid implements SlashCommandProvider {
         int newBid = (int) event.getOption(commandOptionName).getAsLong();
 
         if(newBid < minimum_bid){
-            event.reply(lang.getString(MessagesKey.BID_TOO_LOW, minimum_bid)).queue();
+            event.reply(lang.getStrNoPrefix("BID_TOO_LOW", minimum_bid)).queue();
             return;
         }
 
@@ -87,7 +83,7 @@ public class Bid implements SlashCommandProvider {
         OfflinePlayer lastBidder = Bukkit.getOfflinePlayer(uuid);
         auction.setLastBidder(lastBidder);
         plugin.getAuctionsDatabase().save();
-        event.reply(lang.getString(MessagesKey.NEW_BID, lastBidder.getName(), newBid, Auction.getMinimumBid(remaining_time, newBid))).queue();
+        event.reply(lang.getStrNoPrefix("NEW_BID", lastBidder.getName(), newBid, Auction.getMinimumBid(remaining_time, newBid))).queue();
     }
 
 

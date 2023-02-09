@@ -177,12 +177,14 @@
             <scope>provided</scope>
         </dependency>
 
+<!--
         <dependency>
             <groupId>ar.net.imperial</groupId>
             <artifactId>ImperialLangYML</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+-->
 
 
 <!--        <dependency>

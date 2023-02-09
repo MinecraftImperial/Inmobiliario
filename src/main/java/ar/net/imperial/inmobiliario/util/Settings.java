@@ -10,4 +10,5 @@ public enum Settings {
     JOB_NAME,
     TIME_TO_PAY,
     DEBUG_COMMANDS,
+    LOCALE,
 }

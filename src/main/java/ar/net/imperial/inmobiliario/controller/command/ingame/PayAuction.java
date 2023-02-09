@@ -1,10 +1,9 @@
 package ar.net.imperial.inmobiliario.controller.command.ingame;
 
-import ar.net.imperial.imperiallangyml.LangSource;
 import ar.net.imperial.inmobiliario.Inmobiliario;
 import ar.net.imperial.inmobiliario.model.auction.Auction;
-import ar.net.imperial.inmobiliario.util.MessagesKey;
 import ar.net.imperial.inmobiliario.util.Settings;
+import ar.net.imperial.inmobiliario.util.LangSource;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
@@ -14,7 +13,6 @@ import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.ScrollingGui;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -23,7 +21,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Collections;
 
 @CommandAlias("pagarsubasta")
 public class PayAuction extends BaseCommand {
@@ -39,13 +36,13 @@ public class PayAuction extends BaseCommand {
 
     @Default
     public void onCommand(Player player) {
-        ScrollingGui gui = getGUI();
-        gui.setDefaultClickAction(event -> event.setCancelled(true));
         Collection<Auction> auctions = Auction.getAuctionsWon(player);
         if (auctions.isEmpty()) {
-            player.sendMessage(lang.get(MessagesKey.PAYMENT_MENU_NO_AUCTIONS));
+            player.sendRichMessage(lang.getStr("PAYMENT_MENU_NO_AUCTIONS"));
             return;
         }
+        ScrollingGui gui = getGUI();
+        gui.setDefaultClickAction(event -> event.setCancelled(true));
         for (Auction auction : auctions) {
             GuiItem guiItem = getGuiItem(player, auction);
             gui.addItem(guiItem);
@@ -60,14 +57,14 @@ public class PayAuction extends BaseCommand {
         int z = block.getZ();
         boolean playerHasMoney = economy.has(player, auction.getLastBid());
         Component actionComponent = playerHasMoney ?
-                lang.get(MessagesKey.PAYMENT_MENU_LORE_ACTION_PAY, false)
-                : lang.get(MessagesKey.PAYMENT_MENU_LORE_NOT_ENOUGH_MONEY, false);
+                lang.getForItem("PAYMENT_MENU_LORE_ACTION_PAY")
+                : lang.getForItem("PAYMENT_MENU_LORE_NOT_ENOUGH_MONEY");
 
         @NotNull ItemBuilder itemBuilder = ItemBuilder.from(Material.BOOK)
-                .name(lang.get(MessagesKey.PAYMENT_MENU_ITEM_NAME, false, x, z))
+                .name(lang.getForItem("PAYMENT_MENU_ITEM_NAME", x, z))
                 .lore(
-                        lang.get(MessagesKey.PAYMENT_MENU_LORE_AUCTION_DEBT, false, auction.getLastBid()),
-                        lang.get(MessagesKey.PAYMENT_MENU_LORE_TIME_TO_PAY, false, getRemainingTimeToPay(auction)),
+                        lang.getForItem("PAYMENT_MENU_LORE_AUCTION_DEBT", auction.getLastBid()),
+                        lang.getForItem("PAYMENT_MENU_LORE_TIME_TO_PAY", getRemainingTimeToPay(auction)),
                         Component.text(" "),
                         actionComponent
                 );
@@ -82,9 +79,9 @@ public class PayAuction extends BaseCommand {
     }
 
     private ScrollingGui getGUI() {
-        Component title = lang.get(MessagesKey.PAYMENT_MENU_TITLE, false);
-        Component previousText = lang.get(MessagesKey.PAYMENT_MENU_PREVIOUS, false);
-        Component nextText = lang.get(MessagesKey.PAYMENT_MENU_NEXT, false);
+        Component title = lang.getForItem("PAYMENT_MENU_TITLE");
+        Component previousText = lang.getForItem("PAYMENT_MENU_PREVIOUS");
+        Component nextText = lang.getForItem("PAYMENT_MENU_NEXT");
         ScrollingGui gui = Gui.scrolling()
                 .title(title)
                 .rows(1)
@@ -97,7 +94,11 @@ public class PayAuction extends BaseCommand {
 
     public void payAuction(Player player, Auction auction) {
         if (auction.getStatus().equals(Auction.AuctionStatus.PAID)) {
-            player.sendMessage(lang.get(MessagesKey.AUCTION_ALREADY_PAID));
+            player.sendRichMessage(lang.getStr("AUCTION_ALREADY_PAID"));
+            return;
+        }
+        if (auction.getStatus().equals(Auction.AuctionStatus.CANCELLED)) {
+            player.sendRichMessage(lang.getStr("AUCTION_CANCELLED"));
             return;
         }
         makePayments(player, auction);
@@ -105,7 +106,7 @@ public class PayAuction extends BaseCommand {
         auction.setStatus(Auction.AuctionStatus.PAID);
         auction.transferProperties(player);
         
-        player.sendMessage(lang.get(MessagesKey.AUCTION_PAY_SUCCESS));
+        player.sendRichMessage(lang.getStr("AUCTION_PAY_SUCCESS"));
         
         auction.delete();
         plugin.getAuctionsDatabase().get().set(auction.getUUID().toString(), null);
@@ -119,7 +120,7 @@ public class PayAuction extends BaseCommand {
         OfflinePlayer agent = auction.getAgent();
         economy.depositPlayer(agent, commission);
 
-        if (agent.getPlayer() != null) agent.getPlayer().sendMessage(lang.get(MessagesKey.AUCTION_PAY_COMMISSION, true, (int) commission));
+        if (agent.getPlayer() != null) agent.getPlayer().sendRichMessage(lang.getStr("AUCTION_PAY_COMMISSION", (int) commission));
     }
 
     public String getRemainingTimeToPay(Auction auction) {
@@ -131,7 +132,7 @@ public class PayAuction extends BaseCommand {
         StringBuilder sb = new StringBuilder();
         if (days > 0) sb.append(days).append("d ");
         if (hours > 0) sb.append(hours).append("h ");
-        else sb.append(lang.getString(MessagesKey.AUCTION_PAY_TIME_LEFT_LESS_THAN_HOUR));
+        else sb.append(lang.getStrNoPrefix("AUCTION_PAY_TIME_LEFT_LESS_THAN_HOUR"));
         return sb.toString();
     }
 }

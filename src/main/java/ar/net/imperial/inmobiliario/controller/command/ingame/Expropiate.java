@@ -1,12 +1,11 @@
 package ar.net.imperial.inmobiliario.controller.command.ingame;
 
-import ar.net.imperial.imperiallangyml.LangSource;
 import ar.net.imperial.inmobiliario.Inmobiliario;
 import ar.net.imperial.inmobiliario.model.auction.Auction;
 import ar.net.imperial.inmobiliario.model.auction.AuctionTimer;
-import ar.net.imperial.inmobiliario.util.MessagesKey;
 import ar.net.imperial.inmobiliario.util.Settings;
 import ar.net.imperial.inmobiliario.util.Utils;
+import ar.net.imperial.inmobiliario.util.LangSource;
 import ar.net.imperial.trabajoscore.model.job.Job;
 import ar.net.imperial.trabajoscore.model.player.PlayerWrapper;
 import co.aikar.commands.BaseCommand;
@@ -57,7 +56,7 @@ public class Expropiate extends BaseCommand {
         PlayerWrapper playerWrapper = PlayerWrapper.of(player);
         if (!force) {
             if (!playerWrapper.hasJob(job)) {
-                player.sendMessage(lang.get(MessagesKey.DO_NOT_HAVE_JOB));
+                player.sendRichMessage(lang.getStr("DO_NOT_HAVE_JOB"));
                 return;
             }
         }
@@ -65,7 +64,7 @@ public class Expropiate extends BaseCommand {
         Location location = player.getLocation();
         PSRegion psRegion = PSRegion.fromLocation(location);
         if (psRegion == null) {
-            player.sendMessage(lang.get(MessagesKey.NOT_IN_REGION));
+            player.sendRichMessage(lang.getStr("NOT_IN_REGION"));
             return;
         }
 
@@ -74,7 +73,7 @@ public class Expropiate extends BaseCommand {
             long lastLogin = Utils.lastLogin(owner);
             long daysToExpropriate = config.getInt(Settings.DAYS_TO_EXPROPRIATE.name());
             if (lastLogin < daysToExpropriate) {
-                player.sendMessage(lang.get(MessagesKey.NOT_EXPROPRIATED));
+                player.sendRichMessage(lang.getStr("NOT_EXPROPRIATED"));
                 return;
             }
         }
@@ -89,7 +88,7 @@ public class Expropiate extends BaseCommand {
         Utils.getConnectedRegions(psRegion, connectedRegions, regionManager);
         // Check if any connected region is already being auctioned
         if (connectedRegions.stream().anyMatch((Auction::isAuctioned))) {
-            player.sendMessage(lang.get(MessagesKey.ALREADY_AUCTIONED));
+            player.sendRichMessage(lang.getStr("ALREADY_AUCTIONED"));
             return;
         }
 
@@ -97,7 +96,7 @@ public class Expropiate extends BaseCommand {
         List<String> channels = config.getStringList(Settings.AUCTION_CHANNELS.name());
         String channel = Auction.getAvailableChannel(channels);
         if (channel == null) {
-            player.sendMessage(lang.get(MessagesKey.NO_CHANNELS_AVAILABLE));
+            player.sendRichMessage(lang.getStr("NO_CHANNELS_AVAILABLE"));
             return;
         }
 
@@ -112,7 +111,7 @@ public class Expropiate extends BaseCommand {
         timer.startTimer(plugin, 0, 20);
         plugin.getAuctionsDatabase().get().set(auction.getUUID().toString(), auction);
         plugin.getAuctionsDatabase().save();
-        player.sendMessage(lang.get(MessagesKey.AUCTION_STARTED, true, channel));
+        player.sendRichMessage(lang.getStr("AUCTION_STARTED", channel));
     }
 
 }

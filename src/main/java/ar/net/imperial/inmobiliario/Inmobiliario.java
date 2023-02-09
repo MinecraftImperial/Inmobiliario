@@ -1,7 +1,7 @@
 package ar.net.imperial.inmobiliario;
 
-import ar.net.imperial.imperiallangyml.LangAPI;
-import ar.net.imperial.imperiallangyml.LangSource;
+//import ar.net.imperial.imperiallangyml.LangAPI;
+//import ar.net.imperial.imperiallangyml.LangSource;
 import ar.net.imperial.inmobiliario.controller.EventListener;
 import ar.net.imperial.inmobiliario.controller.PlaceholderManager;
 import ar.net.imperial.inmobiliario.controller.command.ingame.PayAuction;
@@ -10,7 +10,8 @@ import ar.net.imperial.inmobiliario.controller.command.ingame.Expropiate;
 import ar.net.imperial.inmobiliario.model.auction.Auction;
 import ar.net.imperial.inmobiliario.model.auction.AuctionTimer;
 import ar.net.imperial.inmobiliario.util.Settings;
-import ar.net.imperial.inmobiliario.util.configs.ConfigAccessor;
+import ar.net.imperial.inmobiliario.util.ConfigAccessor;
+import ar.net.imperial.inmobiliario.util.LangSource;
 import ar.net.imperial.trabajoscore.model.job.Job;
 import co.aikar.commands.PaperCommandManager;
 import com.sk89q.worldguard.WorldGuard;
@@ -24,7 +25,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 public class Inmobiliario extends JavaPlugin {
@@ -32,11 +34,12 @@ public class Inmobiliario extends JavaPlugin {
 
     private static final long TICKS_PER_SECOND = 20;
 
-    private LangSource lang;
+//    private LangSource lang;
     private Job job;
     private RegionContainer regionContainer; // WorldGuard region container
     private ConfigAccessor auctionsDatabase;
     private static Economy econ = null;
+    private LangSource lang;
 
     @Override
     public void onEnable() {
@@ -143,8 +146,11 @@ public class Inmobiliario extends JavaPlugin {
     }
 
     private void setupLanguageSource() {
-        lang = LangAPI.getLangSource(this);
-        lang.saveDefault();
+        String locale = getConfig().getString(Settings.LOCALE.name(), "es");
+        Locale.setDefault(new Locale(locale));
+        lang = new LangSource(ResourceBundle.getBundle("messages"));
+//        lang = LangAPI.getLangSource(this);
+//        lang.saveDefault();
     }
 
     private void setupJob() {
